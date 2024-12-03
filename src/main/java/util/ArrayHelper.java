@@ -11,4 +11,12 @@ public class ArrayHelper {
             System.out.println();
         }
     }
+
+    public static void printArray_Boolean(boolean[] array) {
+
+        for (int i = 0; i < array.length; i++) {
+            if (array[i]) System.out.println("[" + i + "]: TRUE");
+            else System.out.println("[" + i + "]: FALSE");
+        }
+    }
 }

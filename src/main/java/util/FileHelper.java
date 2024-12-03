@@ -2,11 +2,56 @@ package util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 public class FileHelper {
 
     private static String pathToInputFiles = "src/main/resources/";
+
+    public static String readIntoString(String fileName) {
+
+        StringBuilder result = new StringBuilder();
+
+        try {
+            Scanner scanner = new Scanner(new File(pathToInputFiles + fileName));
+
+            while (scanner.hasNext()) {
+                result.append(scanner.next());
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("[ERROR] FileNotFoundException while looking for file: " + fileName);
+        }
+
+        return result.toString();
+    }
+
+    public static int[][] readIntoArray_Int_2D(String fileName, int numLines) {
+
+        int[][] array = new int[numLines][];
+
+        try {
+            Scanner scanner = new Scanner(new File(pathToInputFiles + fileName));
+
+            int r = 0;
+
+            while (scanner.hasNextLine()) {
+                String[] line = scanner.nextLine().split(" ");
+                array[r] = Arrays.stream(line)
+                        .flatMapToInt(str ->
+                                IntStream.of(Integer.parseInt(str)))
+                        .toArray();
+                r++;
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("[ERROR] FileNotFoundException while looking for file: " + fileName);
+        }
+
+        return array;
+    }
 
     public static int[][] readIntoArray_Int_2D_Sideways(String fileName, int numLines, int numPiecesOnEachLine) {
 
