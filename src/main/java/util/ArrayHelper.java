@@ -30,6 +30,13 @@ public class ArrayHelper {
         }
     }
 
+    public static void printArray_Int(int[] array) {
+
+        for (int n : array) {
+            System.out.println(n);
+        }
+    }
+
     public static void printArray_Char_2D(char[][] array) {
 
         for (char[] row : array) {

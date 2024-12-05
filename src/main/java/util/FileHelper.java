@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 
 public class FileHelper {
 
-    private static final String PATH_TO_INPUT_FILES = "src/main/resources/";
+    public static final String PATH_TO_INPUT_FILES = "src/main/resources/";
 
     public static String readIntoString(String fileName) {
 
