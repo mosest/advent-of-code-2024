@@ -5,6 +5,6 @@ public class Main {
 
         System.out.println("Hello world!");
 
-        System.out.println(Day5.fixIncorrectUpdates());
+        System.out.println(Day6.countNumberOfPossibleLoopTraps());
     }
 }
