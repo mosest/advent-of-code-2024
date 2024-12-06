@@ -1,11 +1,12 @@
 package models;
 
 public class PageRule {
-    int beforePage;
-    int afterPage;
+    public int beforePage;
+    public int afterPage;
 
-    PageRule(int b, int a) {
-        beforePage = b;
-        afterPage = a;
+    public PageRule(int b, int a) { beforePage = b; afterPage = a; }
+
+    public String toString() {
+        return beforePage + " | " + afterPage;
     }
 }

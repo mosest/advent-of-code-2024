@@ -1,7 +1,11 @@
 package days;
 
+import models.Page;
+import models.PageComparator;
+import models.PageRule;
+
 import org.apache.commons.lang3.ArrayUtils;
-import util.ArrayHelper;
+
 import util.FileHelper;
 
 import java.io.File;
@@ -13,92 +17,51 @@ public class Day5 {
 
     private static final String FILENAME = "day5.txt";
 
-    //region Day 1
-
-    public static int countMiddleNumbersOfCorrectUpdates() {
+    // Part 1
+    public static int countMiddleNumbers_CorrectUpdates() {
 
         List<PageRule> pageRules = new ArrayList<>();
         List<int[]> updatesList = new ArrayList<>();
+        readInputAndPopulateLists(pageRules, updatesList);
 
-        try {
-            Scanner scanner = new Scanner(new File(FileHelper.PATH_TO_INPUT_FILES + FILENAME));
+        // Filter down to just the ones that were good noodles
+        List<int[]> correctUpdates =
+                updatesList.stream()
+                    .filter(update ->
+                            updateFollowsAllRules(update, pageRules))
+                    .toList();
 
-            String currentLine = scanner.nextLine();
-
-            // get those page rules
-            while (scanner.hasNextLine() && !currentLine.isEmpty()) {
-                String[] x = currentLine.split("\\|");
-                pageRules.add(new PageRule(
-                        Integer.parseInt(x[0]),
-                        Integer.parseInt(x[1])));
-                currentLine = scanner.nextLine();
-            }
-
-            // now get the updates
-            while (scanner.hasNextLine()) {
-                currentLine = scanner.nextLine();
-                updatesList.add(
-                        Arrays
-                            .stream(currentLine.split(","))
-                            .mapToInt(Integer::parseInt)
-                            .toArray());
-            }
-
-        } catch (FileNotFoundException e) {
-            System.out.println("[ERROR] FileNotFoundException while looking for file: " + FILENAME);
-        }
-
-//        for (PageRule rule : pageRules) { System.out.println(rule.beforePage + " | " + rule.afterPage); }
-//        for (int[] update : updatesList) { ArrayHelper.printArray_Int(update); System.out.println(); }
-
-        int count = 0;
-
-        List<int[]> correctUpdates = new ArrayList<>();
-
-        for (int[] update : updatesList) {
-
-            boolean updateIsValid = true;
-            ArrayHelper.printArray_Int(update);
-
-            // check if it's a correct update
-            for (PageRule rule : pageRules) {
-
-                int indexOfBeforePage = ArrayUtils.indexOf(update, rule.beforePage);
-                int indexOfAfterPage = ArrayUtils.indexOf(update, rule.afterPage);
-
-//                System.out.println("before=" + rule.beforePage + " at index " + indexOfBeforePage + ", after=" + rule.afterPage + " at index " + indexOfAfterPage);
-
-                // if both pages don't exist in update, continue
-                if (indexOfAfterPage < 0 || indexOfBeforePage < 0) continue;
-
-                if (indexOfAfterPage <= indexOfBeforePage) {
-//                    System.out.println("this update broke the rule: " + rule.beforePage + "|" + rule.afterPage);
-                    updateIsValid = false;
-                }
-            }
-
-            if (updateIsValid) {
-                System.out.println("Found a valid update!");
-                ArrayHelper.printArray_Int(update);
-                correctUpdates.add(update);
-            }
-        }
-
-        for (int[] correctUpdate : correctUpdates) {
-            count += correctUpdate[correctUpdate.length / 2];
-        }
-
-        return count;
+        // Sum up the middle page numbers of each correct update
+        return correctUpdates.stream()
+                .map(arr -> arr[arr.length / 2])    // get middle page number
+                .mapToInt(Integer::intValue)        // turn it into an IntStream so I can use the sweet sweet helper methods IntStream gives :)
+                .sum();                             // it's go time boys
     }
 
-    //endregion
-
-    //region Day 2
-
-    public static int fixIncorrectUpdates() {
+    // Part 2
+    public static int countMiddleNumbers_IncorrectUpdatesThatWereFixed() {
 
         List<PageRule> pageRules = new ArrayList<>();
         List<int[]> updatesList = new ArrayList<>();
+        readInputAndPopulateLists(pageRules, updatesList);
+
+        // Filter down to just the ones that are a little broken inside
+        List<int[]> disorderedUpdates =
+                updatesList.stream()
+                        .filter(update ->
+                                updateFollowsAllRules(update, pageRules) == false)
+                        .toList();
+
+        return disorderedUpdates.stream()
+                .map(outOfOrderArray -> sortByPageRules(outOfOrderArray, pageRules))    // put array in the correct order
+                .map(inOrderArray -> inOrderArray[inOrderArray.length / 2])             // get middle page number
+                .mapToInt(Integer::intValue)
+                .sum();
+    }
+
+    //region Helpers
+
+    private static void readInputAndPopulateLists(List<PageRule> pageRules, List<int[]> updatesList) {
 
         try {
             Scanner scanner = new Scanner(new File(FileHelper.PATH_TO_INPUT_FILES + FILENAME));
@@ -128,180 +91,67 @@ public class Day5 {
             System.out.println("[ERROR] FileNotFoundException while looking for file: " + FILENAME);
         }
 
-//        for (PageRule rule : pageRules) { System.out.println(rule.beforePage + " | " + rule.afterPage); }
-//        for (int[] update : updatesList) { ArrayHelper.printArray_Int(update); System.out.println(); }
-
-        int count = 0;
-
-        List<int[]> incorrectUpdates = new ArrayList<>();
-
-        for (int[] update : updatesList) {
-
-            boolean updateIsValid = true;
-            ArrayHelper.printArray_Int(update);
-
-            // check if it's a correct update
-            for (PageRule rule : pageRules) {
-
-                int indexOfBeforePage = ArrayUtils.indexOf(update, rule.beforePage);
-                int indexOfAfterPage = ArrayUtils.indexOf(update, rule.afterPage);
-
-//                System.out.println("before=" + rule.beforePage + " at index " + indexOfBeforePage + ", after=" + rule.afterPage + " at index " + indexOfAfterPage);
-
-                // if both pages don't exist in update, continue
-                if (indexOfAfterPage < 0 || indexOfBeforePage < 0) continue;
-
-                if (indexOfAfterPage <= indexOfBeforePage) {
-//                    System.out.println("this update broke the rule: " + rule.beforePage + "|" + rule.afterPage);
-                    updateIsValid = false;
-                }
-            }
-
-            if (updateIsValid) {
-                // ArrayHelper.printArray_Int(update);
-            } else {
-                System.out.println("Found an invalid update!");
-                incorrectUpdates.add(update);
-                ArrayHelper.printArray_Int(update);
-            }
-        }
-
-        for (int[] incorrectUpdate : incorrectUpdates) {
-            count += getMiddleOfFixedUpdate(incorrectUpdate, pageRules);
-        }
-
-        return count;
+        // DEBUG: Print
+        // for (PageRule rule : pageRules) { System.out.println(rule.beforePage + " | " + rule.afterPage); }
+        // for (int[] update : updatesList) { ArrayHelper.printArray_Int(update); System.out.println(); }
     }
 
-    private static int getMiddleOfFixedUpdate(int[] badUpdate, List<PageRule> rules) {
+    private static boolean updateFollowsAllRules(int[] update, List<PageRule> allRules) {
 
-        List<PageRule> pertinentRules = new ArrayList<>();
+        for (PageRule rule : allRules) {
 
-        for (PageRule rule : rules) {
+            int indexOfBeforePage = ArrayUtils.indexOf(update, rule.beforePage);
+            int indexOfAfterPage = ArrayUtils.indexOf(update, rule.afterPage);
 
-            int indexOfBeforePage = ArrayUtils.indexOf(badUpdate, rule.beforePage);
-            int indexOfAfterPage = ArrayUtils.indexOf(badUpdate, rule.afterPage);
+            // if both pages don't exist in update, continue
+            if (indexOfAfterPage < 0 || indexOfBeforePage < 0) continue;
 
-            // only care about rules where both pieces of the rule are in the badUpdate.
-            // make a list of pertinent rules
-            if (indexOfBeforePage >= 0 && indexOfAfterPage >= 0)
-                pertinentRules.add(rule);
+            // rule broken
+            if (indexOfAfterPage <= indexOfBeforePage) return false;
         }
+
+        return true;
+    }
+
+    private static int[] sortByPageRules(int[] pageNumbersOutOfOrder, List<PageRule> allRules) {
+
+        List<PageRule> pertinentRules =
+                allRules.stream()
+                    .filter(rule ->
+                            ArrayUtils.contains(pageNumbersOutOfOrder, rule.beforePage) &&
+                            ArrayUtils.contains(pageNumbersOutOfOrder, rule.afterPage))
+                    .toList();
 
         List<Page> badPagesBefore;
 
-        List<Page> badPagesNewest = Arrays.stream(badUpdate)
-                .mapToObj(Page::new)
-                .collect(Collectors.toList());
+        List<Page> badPagesNewest =
+                Arrays.stream(pageNumbersOutOfOrder)
+                    .mapToObj(Page::new)
+                    .collect(Collectors.toList()); // can't use .toList() because that would make badPagesNewest immutable
 
-        int counter = 0;
+        int sortCount = 0;
+        final int maxSortCount = 100;
         do {
-            counter++;
-
             badPagesBefore = List.copyOf(badPagesNewest); // immutable shallow copy, so i can compare :)
 
             PageComparator pageComparator = new PageComparator(pertinentRules);
             badPagesNewest.sort(pageComparator);
+            sortCount++;
 
-            if (counter == 90) {
+            if (sortCount == maxSortCount - 5) {
                 int middleNum = badPagesNewest
                         .get(badPagesNewest.size() / 2)
                         .pageNumber;
                 System.out.println("I'm in a loop. Welp! Fuck this! Outtie peace. The current middle number for this guy is: " + middleNum);
             }
 
-        } while (badPagesBefore != badPagesNewest && counter < 100);
+        } while (badPagesBefore != badPagesNewest && sortCount < maxSortCount);
 
-        // Grab the middle and return it
-        return badPagesNewest
-                .get(badPagesNewest.size() / 2)
-                .pageNumber;
+        return badPagesNewest.stream()
+                .map(page -> page.pageNumber)
+                .mapToInt(Integer::intValue)
+                .toArray();
     }
-
-//    private static int[] buildOrderedListOfPageRuleNumbers(List<PageRule> pertinentRules) {
-//
-//        HashMap<Integer, Integer> pagesWithWeight = new HashMap<>();
-//
-//        int defaultSmallWeight = 30;
-//        int defaultBigWeight = 60;
-//
-//        for (PageRule rule : pertinentRules) {
-//
-//            if (pagesWithWeight.containsKey(rule.beforePage) == false) {
-//                pagesWithWeight.put(rule.beforePage, defaultSmallWeight);
-//            } else {
-//                pagesWithWeight.put(rule.beforePage, pagesWithWeight.get(rule.afterPage) - 10);
-//            }
-//
-//            if (pagesWithWeight.containsKey(rule.afterPage) == false) {
-//                pagesWithWeight.put(rule.afterPage, defaultBigWeight);
-//            }
-//
-//            // if the numbers exist, then put them before-and-after each other
-//
-//        }
-//
-//        // create pagesInOrder from hashmap
-//        List<Integer> pagesInOrder = new ArrayList<>();
-//
-//        while(pagesWithWeight.keySet().isEmpty() == false) {
-//
-//            int smallestWeight = 99999;
-//            int smallestPage = -1;
-//            for (Map.Entry<Integer, Integer> entry : pagesWithWeight.entrySet()) {
-//                if (smallestWeight > entry.getValue()) {
-//                    smallestWeight = entry.getValue();
-//                    smallestPage = entry.getKey();
-//                }
-//            }
-//
-//            // find the smallest, remove it, add to list
-//            pagesWithWeight.remove(smallestPage);
-//            pagesInOrder.add(smallestPage);
-//        }
-//
-//        return pagesInOrder.stream()
-//                .mapToInt(Integer::intValue)
-//                .toArray();
-//    }
 
     //endregion
-}
-
-class Page {
-    int pageNumber;
-    Page(int pageNumber) { this.pageNumber = pageNumber; }
-}
-
-class PageRule {
-    int beforePage;
-    int afterPage;
-
-    PageRule(int b, int a) {
-        beforePage = b;
-        afterPage = a;
-    }
-}
-
-class PageComparator implements Comparator<Page> {
-
-    List<PageRule> rules;
-
-    public PageComparator(List<PageRule> rules) { this.rules = rules; }
-
-    @Override
-    public int compare(Page a, Page b) {
-
-        // Check each rule to see if there's something including both A and B.
-        // if not... they're equal, I guess???
-        for (PageRule rule : rules) {
-            if (rule.beforePage == a.pageNumber && rule.afterPage == b.pageNumber) {
-                return -1;
-            } else if (rule.beforePage == b.pageNumber && rule.afterPage == a.pageNumber) {
-                return 1;
-            }
-        }
-
-        return 0;
-    }
 }
