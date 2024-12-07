@@ -11,17 +11,19 @@ public class Day2_ReportsAndLevels {
 
     private String inputFileName = "day2.txt";
     private int inputLineCount = 1000;
+    private int[][] input;
 
     public Day2_ReportsAndLevels(boolean practice) {
         if (practice) {
             inputFileName = inputFileName.replaceAll("\\.", "-practice.");
             inputLineCount = 6;
         }
+
+        input = FileHelper.readIntoArray_Int_2D(inputFileName, inputLineCount);
     }
 
-    public int part1_countSafeReports() {
+    public int part1_CountSafeReports() {
 
-        int[][] input = FileHelper.readIntoArray_Int_2D(inputFileName, inputLineCount);
         ArrayHelper.printArray_Int_2D(input);
 
         int safeReports = 0;
@@ -33,9 +35,8 @@ public class Day2_ReportsAndLevels {
         return safeReports;
     }
 
-    public int part2_countSafeReportsAndRemoveALevel() {
+    public int part2_FixUnsafeReportsAndRecountSafeReports() {
 
-        int[][] input = FileHelper.readIntoArray_Int_2D(inputFileName, inputLineCount);
         ArrayHelper.printArray_Int_2D(input);
 
         int safeReports = 0;
