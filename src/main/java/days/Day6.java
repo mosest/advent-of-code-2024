@@ -9,12 +9,9 @@ public class Day6 {
 
     private static final String FILENAME = "day6.txt";
     private static final int NUM_LINES = 130;
-
     private static final int MAX_TURN_COUNT = 100000;
 
-    //region Day 1
-
-    public static int trackTheGuard() {
+    public static int part1_trackTheGuard_countVisitedSpots() {
 
         char[][] input = FileHelper.readIntoArray_Char_2D(FILENAME, NUM_LINES);
 
@@ -31,7 +28,7 @@ public class Day6 {
                         currentChar == 'v') {
                     guardStartR = r;
                     guardStartC = c;
-                    guardStartDirection = Direction.UNKNOWN.convertChar(currentChar);
+                    guardStartDirection = Direction.convertChar(currentChar);
                 }
             }
         }
@@ -39,6 +36,55 @@ public class Day6 {
         Direction[][] visited = visitAndPopulateVisited(input, guardStartR, guardStartC, guardStartDirection);
         return countVisited(visited);
     }
+
+    public static int part2_countNumberOfPossibleLoopTraps() {
+
+        char[][] input = FileHelper.readIntoArray_Char_2D(FILENAME, NUM_LINES);
+
+        int countTraps = 0;
+        int guardStartR = -1;
+        int guardStartC = -1;
+        Direction guardStartDirection = Direction.UNKNOWN;
+
+        // Find the starting point
+        for (int r = 0; r < input.length && guardStartR == -1; r++) {
+            for (int c = 0; c < input[r].length && guardStartC == -1; c++) {
+                char currentChar = input[r][c];
+                if (currentChar == '^' ||
+                        currentChar == '>' ||
+                        currentChar == '<' ||
+                        currentChar == 'v') {
+                    guardStartR = r;
+                    guardStartC = c;
+                    guardStartDirection = Direction.convertChar(currentChar);
+                }
+            }
+        }
+
+        // Go through each spot in array, and put a blocker there. Then, track the guard and see if she's infinitely looping. If so, count++
+        for (int r = 0; r < input.length; r++) {
+            for (int c = 0; c < input[r].length; c++) {
+
+                if (input[r][c] == '#') continue;
+                if (input[r][c] == '^') continue;
+                if (input[r][c] == '>') continue;
+                if (input[r][c] == '<') continue;
+                if (input[r][c] == 'v') continue;
+
+                char oldSpot = input[r][c];
+                input[r][c] = '#'; // TODO TARA remember to undo this change before you loop again
+
+                boolean looping = visitAndDetermineIfLooping(input, guardStartR, guardStartC, guardStartDirection);
+                if (looping) countTraps++;
+
+                input[r][c] = oldSpot;
+            }
+        }
+
+        return countTraps;
+    }
+
+    //region Helpers
 
     private static int countVisited(Direction[][] arr) {
 
@@ -160,57 +206,6 @@ public class Day6 {
         }
 
         return -999;
-    }
-
-    //endregion
-
-    //region Day 2
-
-    public static int countNumberOfPossibleLoopTraps() {
-
-        char[][] input = FileHelper.readIntoArray_Char_2D(FILENAME, NUM_LINES);
-
-        int countTraps = 0;
-        int guardStartR = -1;
-        int guardStartC = -1;
-        Direction guardStartDirection = Direction.UNKNOWN;
-
-        // Find the starting point
-        for (int r = 0; r < input.length && guardStartR == -1; r++) {
-            for (int c = 0; c < input[r].length && guardStartC == -1; c++) {
-                char currentChar = input[r][c];
-                if (currentChar == '^' ||
-                        currentChar == '>' ||
-                        currentChar == '<' ||
-                        currentChar == 'v') {
-                    guardStartR = r;
-                    guardStartC = c;
-                    guardStartDirection = Direction.UNKNOWN.convertChar(currentChar);
-                }
-            }
-        }
-
-        // Go through each spot in array, and put a blocker there. Then, track the guard and see if she's infinitely looping. If so, count++
-        for (int r = 0; r < input.length; r++) {
-            for (int c = 0; c < input[r].length; c++) {
-
-                if (input[r][c] == '#') continue;
-                if (input[r][c] == '^') continue;
-                if (input[r][c] == '>') continue;
-                if (input[r][c] == '<') continue;
-                if (input[r][c] == 'v') continue;
-
-                char oldSpot = input[r][c];
-                input[r][c] = '#'; // TODO TARA remember to undo this change before you loop again
-
-                boolean looping = visitAndDetermineIfLooping(input, guardStartR, guardStartC, guardStartDirection);
-                if (looping) countTraps++;
-
-                input[r][c] = oldSpot;
-            }
-        }
-
-        return countTraps;
     }
 
     private static boolean visitAndDetermineIfLooping(char[][] input, int startR, int startC, Direction startDirection) {

@@ -13,18 +13,17 @@ import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Day5 {
+public class Day5_PutPagesBackInOrder {
 
     private static final String FILENAME = "day5.txt";
 
-    // Part 1
-    public static int countMiddleNumbers_CorrectUpdates() {
+    public static int part1_CountMiddleNumbersOfCorrectUpdates() {
 
         List<PageRule> pageRules = new ArrayList<>();
         List<int[]> updatesList = new ArrayList<>();
         readInputAndPopulateLists(pageRules, updatesList);
 
-        // Filter down to just the ones that were good noodles
+        // Filter down to just the page subsections ("updates") that were in order. The good noodles :)
         List<int[]> correctUpdates =
                 updatesList.stream()
                     .filter(update ->
@@ -38,8 +37,7 @@ public class Day5 {
                 .sum();                             // it's go time boys
     }
 
-    // Part 2
-    public static int countMiddleNumbers_IncorrectUpdatesThatWereFixed() {
+    public static int part2_FixUpdatesAndCountMiddleNumbers() {
 
         List<PageRule> pageRules = new ArrayList<>();
         List<int[]> updatesList = new ArrayList<>();

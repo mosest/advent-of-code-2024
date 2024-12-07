@@ -3,19 +3,25 @@ package days;
 import util.ArrayHelper;
 import util.FileHelper;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.sort;
-
 public class Day2_ReportsAndLevels {
 
-    public static int countSafeReports() {
+    private String inputFileName = "day2.txt";
+    private int inputLineCount = 1000;
 
-        int[][] input = FileHelper.readIntoArray_Int_2D("day2.txt", 1000);
+    public Day2_ReportsAndLevels(boolean practice) {
+        if (practice) {
+            inputFileName = inputFileName.replaceAll("\\.", "-practice.");
+            inputLineCount = 6;
+        }
+    }
+
+    public int part1_countSafeReports() {
+
+        int[][] input = FileHelper.readIntoArray_Int_2D(inputFileName, inputLineCount);
         ArrayHelper.printArray_Int_2D(input);
 
         int safeReports = 0;
@@ -27,9 +33,9 @@ public class Day2_ReportsAndLevels {
         return safeReports;
     }
 
-    public static int countSafeReportsAndRemoveALevel() {
+    public int part2_countSafeReportsAndRemoveALevel() {
 
-        int[][] input = FileHelper.readIntoArray_Int_2D("day2.txt", 1000);
+        int[][] input = FileHelper.readIntoArray_Int_2D(inputFileName, inputLineCount);
         ArrayHelper.printArray_Int_2D(input);
 
         int safeReports = 0;
