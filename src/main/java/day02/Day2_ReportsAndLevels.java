@@ -1,4 +1,4 @@
-package days;
+package day02;
 
 import util.ArrayHelper;
 import util.FileHelper;

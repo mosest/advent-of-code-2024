@@ -8,12 +8,12 @@ import java.util.HashMap;
 
 import static java.util.Arrays.sort;
 
-public class Day1_TwoSimilarLists {
+public class Day1 {
 
     private String inputFileName = "day1.txt";
     private int inputLineCount = 1000;
 
-    public Day1_TwoSimilarLists(boolean practice) {
+    public Day1(boolean practice) {
         if (practice) {
             inputFileName = inputFileName.replaceAll("\\.", "-practice.");
             inputLineCount = 6;

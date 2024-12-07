@@ -1,5 +1,6 @@
 package days;
 
+import day02.Day2_ReportsAndLevels;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
