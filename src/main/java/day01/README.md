@@ -1,5 +1,14 @@
 # Day 1: Comparing Two Lists and Calculating Their "Similarity Score"
 
+
+
+|              | Part One                           | Part Two                           |
+|--------------|------------------------------------|------------------------------------|
+| **Difficulty** | ⭐⚪⚪⚪⚪ Trivial                      | ⭐⚪⚪⚪⚪ Trivial                      |
+| **Fun**      | ⭐⭐⭐⭐⭐ Wahoo!                       | ⭐⭐⭐⭐⭐ Yippee!                      |
+| | 🎵 *I Had Some Help - Post Malone, Morgan Wallen* | 🎵 *I Ain't Saying - Jordan Davis* |
+| | Happy first day of Advent of Code 2024!! |                                    |
+
 ### Part One
 
 The Elves discover an assortment of notes and lists of historically significant locations! This seems to be the planning the Chief Historian was doing before he left. Perhaps these notes can be used to determine which locations to search?
