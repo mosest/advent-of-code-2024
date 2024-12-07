@@ -1,17 +1,27 @@
-package days;
+package day03;
 
 import util.ArrayHelper;
 import util.FileHelper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public class Day3_CorruptedComputers {
+public class Day3 {
+
+    private String inputFileName = "day3.txt";
+    private String input;
+
+    public Day3(boolean practice) {
+        if (practice) {
+            inputFileName = inputFileName.replaceAll("\\.", "-practice.");
+        }
+
+        input = FileHelper.readIntoString(inputFileName);
+    }
 
     // "mul(x,y)" without quotes, where x and y are at least 1-digit numbers and at most 3-digit numbers
     private static final String REGEX_MUL = "mul\\(\\d{1,3},\\d{1,3}\\)";
@@ -22,10 +32,7 @@ public class Day3_CorruptedComputers {
     // don't()
     private static final String REGEX_DONT = "don't\\(\\)";
 
-    public static int multiply() {
-
-        String input = FileHelper.readIntoString("day3.txt");
-        System.out.println(input);
+    public int part1_Multiply() {
 
         List<String> listOfMatchingStrings = new ArrayList<>();
 
@@ -38,9 +45,7 @@ public class Day3_CorruptedComputers {
         Stream<String> outputStream = matcher.results().map(MatchResult::group);
         outputStream.forEach(listOfMatchingStrings::add);
 
-        System.out.println("Matching strings are as follows...");
         for (String str : listOfMatchingStrings) {
-            System.out.println(str);
 
             str = str.substring(4, str.length() - 1);
             String[] stringsToMultiply = str.split(",");
@@ -54,10 +59,7 @@ public class Day3_CorruptedComputers {
         return sum;
     }
 
-    public static int multiplyWithDosAndDonts() {
-
-        String input = FileHelper.readIntoString("day3.txt");
-        System.out.println(input);
+    public int part2_MultiplyWithDosAndDonts() {
 
         List<MatchResult> listOfMuls = new ArrayList<>();
         List<MatchResult> listOfDos = new ArrayList<>();
@@ -82,21 +84,6 @@ public class Day3_CorruptedComputers {
 
         Stream<MatchResult> dontOutputStream = dontMatcher.results();
         dontOutputStream.forEach(listOfDonts::add);
-
-        System.out.println("\nMul strings are as follows (with indices hopefully!)...");
-        for (MatchResult mr : listOfMuls) {
-            System.out.println(mr.group() + " (at index " + mr.start() + ")");
-        }
-
-        System.out.println("\ndo() strings are as follows (with indices hopefully!)...");
-        for (MatchResult mr : listOfDos) {
-            System.out.println(mr.group() + " (at index " + mr.start() + ")");
-        }
-
-        System.out.println("\ndon't() strings are as follows (with indices hopefully!)...");
-        for (MatchResult mr : listOfDonts) {
-            System.out.println(mr.group() + " (at index " + mr.start() + ")");
-        }
 
         // Great, now we have all our muls, dos, and don'ts.
         // Now how to parse... hmm. What if I go through the dos and don'ts, and calculate a list of dead zones?
@@ -136,7 +123,6 @@ public class Day3_CorruptedComputers {
 
             aliveZones[i] = toggle;
         }
-        ArrayHelper.printArray_Boolean(aliveZones);
 
         // Okay, assuming we built our bool[] right, we can now just check every mul-index and listen to its value
         for (MatchResult mr : listOfMuls) {
@@ -148,10 +134,10 @@ public class Day3_CorruptedComputers {
                 int a = Integer.parseInt(stringsToMultiply[0]);
                 int b = Integer.parseInt(stringsToMultiply[1]);
 
-                System.out.println("Adding " + a + " * " + b + " because it's in a safe zone at index " + mr.start() + "...");
+                // System.out.println("Adding " + a + " * " + b + " because it's in a safe zone at index " + mr.start() + "...");
                 sum += a * b;
             } else {
-                System.out.println("Ignoring " + mr.group());
+                // System.out.println("Ignoring " + mr.group());
             }
         }
 
