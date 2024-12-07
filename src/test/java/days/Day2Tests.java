@@ -1,6 +1,6 @@
 package days;
 
-import day02.Day2_ReportsAndLevels;
+import day02.Day2;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,7 +12,7 @@ public class Day2Tests {
 
     @Test
     public void Day2_Part1_Practice() {
-        int actual = new Day2_ReportsAndLevels(USING_PRACTICE_INPUT)
+        int actual = new Day2(USING_PRACTICE_INPUT)
                 .part1_CountSafeReports();
 
         assertEquals(2, actual);
@@ -20,7 +20,7 @@ public class Day2Tests {
 
     @Test
     public void Day2_Part1_Puzzle() {
-        int actual = new Day2_ReportsAndLevels(USING_PUZZLE_INPUT)
+        int actual = new Day2(USING_PUZZLE_INPUT)
                 .part1_CountSafeReports();
 
         assertEquals(356, actual);
@@ -28,7 +28,7 @@ public class Day2Tests {
 
     @Test
     public void Day2_Part2_Practice() {
-        int actual = new Day2_ReportsAndLevels(USING_PRACTICE_INPUT)
+        int actual = new Day2(USING_PRACTICE_INPUT)
                 .part2_FixUnsafeReportsAndRecountSafeReports();
 
         assertEquals(4, actual);
@@ -36,7 +36,7 @@ public class Day2Tests {
 
     @Test
     public void Day2_Part2_Puzzle() {
-        int actual = new Day2_ReportsAndLevels(USING_PUZZLE_INPUT)
+        int actual = new Day2(USING_PUZZLE_INPUT)
                 .part2_FixUnsafeReportsAndRecountSafeReports();
 
         assertEquals(413, actual);

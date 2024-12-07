@@ -7,13 +7,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Day2_ReportsAndLevels {
+public class Day2 {
 
     private String inputFileName = "day2.txt";
     private int inputLineCount = 1000;
     private int[][] input;
 
-    public Day2_ReportsAndLevels(boolean practice) {
+    public Day2(boolean practice) {
         if (practice) {
             inputFileName = inputFileName.replaceAll("\\.", "-practice.");
             inputLineCount = 6;
