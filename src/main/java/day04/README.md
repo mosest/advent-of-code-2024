@@ -1,11 +1,11 @@
 # Day 4: XMAS Word Search
 
-|              | Part One                                                                                                                                                                                                        | Part Two                       |
-|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------|
-| **Difficulty** | ⭐⭐⚪⚪⚪                                                                                                                                                                                                           | ⭐⭐⚪⚪⚪                          |
-| **Fun**      | ⭐⭐⭐⭐⚪                                                                                                                                                                                                           | ⭐⭐⭐⚪⚪                          |
-| | 🎵 *So Contagious - Acceptance*                                                                                                                                                                                 | 🎵 *Breaking Dishes - Rihanna* |
-| | BROKE: Read the input once, and traverse the array in all 4 directions looking for XMAS<br><br>WOKE: Read the input 4 times, in a different orientation each time, and do a simple String search for XMAS/SAMX. |                                |
+|              | Part One                                                                                                                                                                                                      | Part Two                       |
+|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------|
+| **Difficulty** | ⭐⭐⚪⚪⚪                                                                                                                                                                                                         | ⭐⭐⚪⚪⚪                          |
+| **Fun**      | ⭐⭐⭐⭐⚪                                                                                                                                                                                                         | ⭐⭐⚪⚪⚪ Kind of boring           |
+| | 🎵 *So Contagious - Acceptance*                                                                                                                                                                               | 🎵 *Breaking Dishes - Rihanna* |
+| | BROKE: Read the input once, and traverse the array in all 4 directions looking for XMAS<br><br>WOKE: Read the input 4 times, in a different orientation each time, and do a simple String search for XMAS |       |
 
 ### Part One
 

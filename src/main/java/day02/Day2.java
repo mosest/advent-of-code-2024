@@ -1,47 +1,33 @@
 package day02;
 
-import util.ArrayHelper;
+import models.Day;
 import util.FileHelper;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Day2 {
+public class Day2 extends Day {
 
-    private String inputFileName = "day2.txt";
-    private int inputLineCount = 1000;
-    private int[][] input;
+    private final int[][] INPUT;
 
     public Day2(boolean practice) {
-        if (practice) {
-            inputFileName = inputFileName.replaceAll("\\.", "-practice.");
-            inputLineCount = 6;
-        }
-
-        input = FileHelper.readIntoArray_Int_2D(inputFileName, inputLineCount);
+        super("day2.txt", practice);
+        INPUT = FileHelper.readIntoArray_Int_2D(INPUT_FILE_NAME, INPUT_NUM_LINES);
     }
 
-    public int part1_CountSafeReports() {
+    public int part1() {
+        return Arrays.stream(INPUT)
+                .filter(Day2::isSafeReport)
+                .toList()
+                .size();
+    }
 
-        ArrayHelper.printArray_Int_2D(input);
+    public int part2() {
 
         int safeReports = 0;
 
-        for (int[] report : input)
-            if (isSafeReport(report))
-                safeReports++;
-
-        return safeReports;
-    }
-
-    public int part2_FixUnsafeReportsAndRecountSafeReports() {
-
-        ArrayHelper.printArray_Int_2D(input);
-
-        int safeReports = 0;
-
-        for (int[] report : input) {
+        for (int[] report : INPUT) {
 
             if (isSafeReport(report))
                 safeReports++;

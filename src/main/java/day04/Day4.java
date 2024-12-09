@@ -9,22 +9,22 @@ import java.util.List;
 
 public class Day4 extends Day {
 
-    private char[][] input;
-    private char[][] sidewaysInput;
+    private final char[][] INPUT;
+    private final char[][] INPUT_SIDEWAYS;
 
     public Day4(boolean practice) {
-        super("day4.txt", practice);
-        input = FileHelper.readIntoArray_Char_2D(INPUT_FILE_NAME, INPUT_NUM_LINES);
-        sidewaysInput = FileHelper.readIntoArray_Char_2D_Sideways(INPUT_FILE_NAME, INPUT_NUM_LINES, INPUT_NUM_LINES);
+        super("day4.txt", 140, 10, practice);
+        INPUT = FileHelper.readIntoArray_Char_2D(INPUT_FILE_NAME, INPUT_NUM_LINES);
+        INPUT_SIDEWAYS = FileHelper.readIntoArray_Char_2D_Sideways(INPUT_FILE_NAME, INPUT_NUM_LINES, INPUT_NUM_LINES);
     }
 
     public int part1() {
 
-        List<String> diagonalInput = ArrayHelper.transform2DCharIntoStringList_Diagonally_ForwardSlash(input);
-        List<String> diagonalInputBackslash = ArrayHelper.transform2DCharIntoStringList_Diagonally_Backslash(input);
+        List<String> diagonalInput = ArrayHelper.transform2DCharIntoStringList_Diagonally_ForwardSlash(INPUT);
+        List<String> diagonalInputBackslash = ArrayHelper.transform2DCharIntoStringList_Diagonally_Backslash(INPUT);
 
-        int count = countHorizontalMatches(input);
-        count += countHorizontalMatches(sidewaysInput);
+        int count = countHorizontalMatches(INPUT);
+        count += countHorizontalMatches(INPUT_SIDEWAYS);
         count += countHorizontalMatches(diagonalInput);
         count += countHorizontalMatches(diagonalInputBackslash);
 
@@ -38,7 +38,7 @@ public class Day4 extends Day {
         S S
     */
     public int part2() {
-        return traverseArrayAndInspectMASes(input);
+        return traverseArrayAndInspectMASes(INPUT);
     }
 
     //region Helpers

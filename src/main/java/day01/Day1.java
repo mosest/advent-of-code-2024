@@ -1,5 +1,6 @@
 package day01;
 
+import models.Day;
 import util.ArrayHelper;
 import util.FileHelper;
 
@@ -8,48 +9,45 @@ import java.util.HashMap;
 
 import static java.util.Arrays.sort;
 
-public class Day1 {
+public class Day1 extends Day {
 
-    private String inputFileName = "day1.txt";
-    private int inputLineCount = 1000;
+    private final int[][] INPUT;
 
     public Day1(boolean practice) {
-        if (practice) {
-            inputFileName = inputFileName.replaceAll("\\.", "-practice.");
-            inputLineCount = 6;
-        }
+        super("day1.txt", 1000, 6, practice);
+        INPUT = FileHelper.readIntoArray_Int_2D_Sideways(INPUT_FILE_NAME, INPUT_NUM_LINES, 2);
     }
 
-    public int part1_GetDistanceBetweenLists() {
+    public int part1() {
 
-        int[][] input = FileHelper.readIntoArray_Int_2D_Sideways(inputFileName, inputLineCount, 2);
-        ArrayHelper.printArray_Int_2D(input);
+        ArrayHelper.printArray_Int_2D(INPUT);
 
-        sort(input[0]); // left  column of numbers
-        sort(input[1]); // right column of numbers
+        sort(INPUT[0]); // left  column of numbers
+        sort(INPUT[1]); // right column of numbers
 
         int sum = 0;
-        for (int i = 0; i < inputLineCount; i++) {
-            sum += Math.abs(input[0][i] - input[1][i]);
+        for (int i = 0; i < INPUT_NUM_LINES; i++) {
+            sum += Math.abs(INPUT[0][i] - INPUT[1][i]);
         }
 
         return sum;
     }
 
-    public int part2_GetSimilarityScore() {
+    public int part2() {
 
-        int[][] input = FileHelper.readIntoArray_Int_2D_Sideways(inputFileName, inputLineCount, 2);
-        ArrayHelper.printArray_Int_2D(input);
+        ArrayHelper.printArray_Int_2D(INPUT);
 
         // Hashmap where key is n:          a number in the right column of the input,
         // and the value is frequency(n):   the number of times that n shows up in the right column of the input
-        HashMap<Integer, Integer> frequencies = populateFrequencies(input[1]);
+        HashMap<Integer, Integer> frequencies = populateFrequencies(INPUT[1]);
 
-        return Arrays.stream(input[0])
+        return Arrays.stream(INPUT[0])
                 .map(leftNum ->
                         leftNum * frequencies.getOrDefault(leftNum, 0)) // similarity score
                 .sum();
     }
+
+    //region Helpers
 
     private static HashMap<Integer, Integer> populateFrequencies(int[] searchList) {
 
@@ -65,4 +63,6 @@ public class Day1 {
 
         return result;
     }
+
+    //endregion
 }

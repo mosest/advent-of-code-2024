@@ -13,7 +13,7 @@ public class Day2Tests {
     @Test
     public void Day2_Part1_Practice() {
         int actual = new Day2(USING_PRACTICE_INPUT)
-                .part1_CountSafeReports();
+                .part1();
 
         assertEquals(2, actual);
     }
@@ -21,7 +21,7 @@ public class Day2Tests {
     @Test
     public void Day2_Part1_Puzzle() {
         int actual = new Day2(USING_PUZZLE_INPUT)
-                .part1_CountSafeReports();
+                .part1();
 
         assertEquals(356, actual);
     }
@@ -29,7 +29,7 @@ public class Day2Tests {
     @Test
     public void Day2_Part2_Practice() {
         int actual = new Day2(USING_PRACTICE_INPUT)
-                .part2_FixUnsafeReportsAndRecountSafeReports();
+                .part2();
 
         assertEquals(4, actual);
     }
@@ -37,7 +37,7 @@ public class Day2Tests {
     @Test
     public void Day2_Part2_Puzzle() {
         int actual = new Day2(USING_PUZZLE_INPUT)
-                .part2_FixUnsafeReportsAndRecountSafeReports();
+                .part2();
 
         assertEquals(413, actual);
     }
