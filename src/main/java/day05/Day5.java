@@ -1,5 +1,6 @@
 package day05;
 
+import models.Day;
 import models.Page;
 import models.PageComparator;
 import models.PageRule;
@@ -13,21 +14,23 @@ import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Day5_PutPagesBackInOrder {
+public class Day5 extends Day {
 
-    private static final String FILENAME = "day5.txt";
+    private final List<PageRule> INPUT_PAGE_RULES = new ArrayList<>();
+    private final List<int[]> INPUT_UPDATES_LIST = new ArrayList<>();
 
-    public static int part1_CountMiddleNumbersOfCorrectUpdates() {
+    public Day5(boolean practice) {
+        super("day5.txt", practice);
+        readInputAndPopulateLists(INPUT_PAGE_RULES, INPUT_UPDATES_LIST);
+    }
 
-        List<PageRule> pageRules = new ArrayList<>();
-        List<int[]> updatesList = new ArrayList<>();
-        readInputAndPopulateLists(pageRules, updatesList);
+    public int part1() {
 
         // Filter down to just the page subsections ("updates") that were in order. The good noodles :)
         List<int[]> correctUpdates =
-                updatesList.stream()
+                INPUT_UPDATES_LIST.stream()
                     .filter(update ->
-                            updateFollowsAllRules(update, pageRules))
+                            updateFollowsAllRules(update))
                     .toList();
 
         // Sum up the middle page numbers of each correct update
@@ -37,21 +40,17 @@ public class Day5_PutPagesBackInOrder {
                 .sum();                             // it's go time boys
     }
 
-    public static int part2_FixUpdatesAndCountMiddleNumbers() {
-
-        List<PageRule> pageRules = new ArrayList<>();
-        List<int[]> updatesList = new ArrayList<>();
-        readInputAndPopulateLists(pageRules, updatesList);
+    public int part2() {
 
         // Filter down to just the ones that are a little broken inside
         List<int[]> disorderedUpdates =
-                updatesList.stream()
+                INPUT_UPDATES_LIST.stream()
                         .filter(update ->
-                                updateFollowsAllRules(update, pageRules) == false)
+                                updateFollowsAllRules(update) == false)
                         .toList();
 
         return disorderedUpdates.stream()
-                .map(outOfOrderArray -> sortByPageRules(outOfOrderArray, pageRules))    // put array in the correct order
+                .map(this::sortByPageRules)    // put array in the correct order
                 .map(inOrderArray -> inOrderArray[inOrderArray.length / 2])             // get middle page number
                 .mapToInt(Integer::intValue)
                 .sum();
@@ -59,10 +58,10 @@ public class Day5_PutPagesBackInOrder {
 
     //region Helpers
 
-    private static void readInputAndPopulateLists(List<PageRule> pageRules, List<int[]> updatesList) {
+    private void readInputAndPopulateLists(List<PageRule> pageRules, List<int[]> updatesList) {
 
         try {
-            Scanner scanner = new Scanner(new File(FileHelper.PATH_TO_INPUT_FILES + FILENAME));
+            Scanner scanner = new Scanner(new File(FileHelper.PATH_TO_INPUT_FILES + INPUT_FILE_NAME));
 
             String currentLine = scanner.nextLine();
 
@@ -86,17 +85,13 @@ public class Day5_PutPagesBackInOrder {
             }
 
         } catch (FileNotFoundException e) {
-            System.out.println("[ERROR] FileNotFoundException while looking for file: " + FILENAME);
+            System.out.println("[ERROR] FileNotFoundException while looking for file: " + INPUT_FILE_NAME);
         }
-
-        // DEBUG: Print
-        // for (PageRule rule : pageRules) { System.out.println(rule.beforePage + " | " + rule.afterPage); }
-        // for (int[] update : updatesList) { ArrayHelper.printArray_Int(update); System.out.println(); }
     }
 
-    private static boolean updateFollowsAllRules(int[] update, List<PageRule> allRules) {
+    private boolean updateFollowsAllRules(int[] update) {
 
-        for (PageRule rule : allRules) {
+        for (PageRule rule : INPUT_PAGE_RULES) {
 
             int indexOfBeforePage = ArrayUtils.indexOf(update, rule.beforePage);
             int indexOfAfterPage = ArrayUtils.indexOf(update, rule.afterPage);
@@ -111,10 +106,10 @@ public class Day5_PutPagesBackInOrder {
         return true;
     }
 
-    private static int[] sortByPageRules(int[] pageNumbersOutOfOrder, List<PageRule> allRules) {
+    private int[] sortByPageRules(int[] pageNumbersOutOfOrder) {
 
         List<PageRule> pertinentRules =
-                allRules.stream()
+                INPUT_PAGE_RULES.stream()
                     .filter(rule ->
                             ArrayUtils.contains(pageNumbersOutOfOrder, rule.beforePage) &&
                             ArrayUtils.contains(pageNumbersOutOfOrder, rule.afterPage))
