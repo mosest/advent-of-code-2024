@@ -1,27 +1,30 @@
 package day06;
 
+import models.Day;
 import models.Direction;
 import util.FileHelper;
 
 import java.util.*;
 
-public class Day6 {
+public class Day6 extends Day {
 
-    private static final String FILENAME = "day6.txt";
-    private static final int NUM_LINES = 130;
+    private final char[][] INPUT;
     private static final int MAX_TURN_COUNT = 100000;
 
-    public static int part1_trackTheGuard_countVisitedSpots() {
+    public Day6(boolean practice) {
+        super("day6.txt", 130, 10, practice);
+        INPUT = FileHelper.readIntoArray_Char_2D(INPUT_FILE_NAME, INPUT_NUM_LINES);
+    }
 
-        char[][] input = FileHelper.readIntoArray_Char_2D(FILENAME, NUM_LINES);
+    public int part1() {
 
         int guardStartR = -1;
         int guardStartC = -1;
         Direction guardStartDirection = Direction.UNKNOWN;
 
-        for (int r = 0; r < input.length && guardStartR == -1; r++) {
-            for (int c = 0; c < input[r].length && guardStartC == -1; c++) {
-                char currentChar = input[r][c];
+        for (int r = 0; r < INPUT.length && guardStartR == -1; r++) {
+            for (int c = 0; c < INPUT[r].length && guardStartC == -1; c++) {
+                char currentChar = INPUT[r][c];
                 if (currentChar == '^' ||
                         currentChar == '>' ||
                         currentChar == '<' ||
@@ -33,13 +36,11 @@ public class Day6 {
             }
         }
 
-        Direction[][] visited = visitAndPopulateVisited(input, guardStartR, guardStartC, guardStartDirection);
+        Direction[][] visited = visitAndPopulateVisited(INPUT, guardStartR, guardStartC, guardStartDirection);
         return countVisited(visited);
     }
 
-    public static int part2_countNumberOfPossibleLoopTraps() {
-
-        char[][] input = FileHelper.readIntoArray_Char_2D(FILENAME, NUM_LINES);
+    public int part2() {
 
         int countTraps = 0;
         int guardStartR = -1;
@@ -47,9 +48,9 @@ public class Day6 {
         Direction guardStartDirection = Direction.UNKNOWN;
 
         // Find the starting point
-        for (int r = 0; r < input.length && guardStartR == -1; r++) {
-            for (int c = 0; c < input[r].length && guardStartC == -1; c++) {
-                char currentChar = input[r][c];
+        for (int r = 0; r < INPUT.length && guardStartR == -1; r++) {
+            for (int c = 0; c < INPUT[r].length && guardStartC == -1; c++) {
+                char currentChar = INPUT[r][c];
                 if (currentChar == '^' ||
                         currentChar == '>' ||
                         currentChar == '<' ||
@@ -62,22 +63,22 @@ public class Day6 {
         }
 
         // Go through each spot in array, and put a blocker there. Then, track the guard and see if she's infinitely looping. If so, count++
-        for (int r = 0; r < input.length; r++) {
-            for (int c = 0; c < input[r].length; c++) {
+        for (int r = 0; r < INPUT.length; r++) {
+            for (int c = 0; c < INPUT[r].length; c++) {
 
-                if (input[r][c] == '#') continue;
-                if (input[r][c] == '^') continue;
-                if (input[r][c] == '>') continue;
-                if (input[r][c] == '<') continue;
-                if (input[r][c] == 'v') continue;
+                if (INPUT[r][c] == '#') continue;
+                if (INPUT[r][c] == '^') continue;
+                if (INPUT[r][c] == '>') continue;
+                if (INPUT[r][c] == '<') continue;
+                if (INPUT[r][c] == 'v') continue;
 
-                char oldSpot = input[r][c];
-                input[r][c] = '#'; // TODO TARA remember to undo this change before you loop again
+                char oldSpot = INPUT[r][c];
+                INPUT[r][c] = '#'; // TODO TARA remember to undo this change before you loop again
 
-                boolean looping = visitAndDetermineIfLooping(input, guardStartR, guardStartC, guardStartDirection);
+                boolean looping = visitAndDetermineIfLooping(INPUT, guardStartR, guardStartC, guardStartDirection);
                 if (looping) countTraps++;
 
-                input[r][c] = oldSpot;
+                INPUT[r][c] = oldSpot;
             }
         }
 

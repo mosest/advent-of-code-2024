@@ -12,7 +12,7 @@ public class Day2 extends Day {
     private final int[][] INPUT;
 
     public Day2(boolean practice) {
-        super("day2.txt", practice);
+        super("day2.txt", 1000, 6, practice);
         INPUT = FileHelper.readIntoArray_Int_2D(INPUT_FILE_NAME, INPUT_NUM_LINES);
     }
 
