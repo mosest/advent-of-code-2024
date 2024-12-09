@@ -1,4 +1,4 @@
-package days;
+package day04;
 
 import org.apache.commons.lang3.StringUtils;
 import util.ArrayHelper;
