@@ -1,5 +1,6 @@
 package days;
 
+import day07.Day7_EquationRecursion;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,4 +1,4 @@
-package days;
+package day06;
 
 import models.Direction;
 import util.FileHelper;

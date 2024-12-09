@@ -1,4 +1,4 @@
-package days;
+package day05;
 
 import models.Page;
 import models.PageComparator;

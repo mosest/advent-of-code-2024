@@ -1,33 +1,27 @@
 package day04;
 
+import models.Day;
 import org.apache.commons.lang3.StringUtils;
 import util.ArrayHelper;
 import util.FileHelper;
 
 import java.util.List;
 
-public class Day4_XmasWordSearch {
+public class Day4 extends Day {
 
-    private static final String FILENAME = "day4.txt";
-    private static final int NUM_LINES = 140;
+    private char[][] input;
+    private char[][] sidewaysInput;
 
-    //region Day 1
+    public Day4(boolean practice) {
+        super("day4.txt", practice);
+        input = FileHelper.readIntoArray_Char_2D(INPUT_FILE_NAME, INPUT_NUM_LINES);
+        sidewaysInput = FileHelper.readIntoArray_Char_2D_Sideways(INPUT_FILE_NAME, INPUT_NUM_LINES, INPUT_NUM_LINES);
+    }
 
-    public static int countXmas() {
-
-        char[][] input = FileHelper.readIntoArray_Char_2D(FILENAME, NUM_LINES);
-        char[][] sidewaysInput = FileHelper.readIntoArray_Char_2D_Sideways(FILENAME, NUM_LINES, NUM_LINES);
+    public int part1() {
 
         List<String> diagonalInput = ArrayHelper.transform2DCharIntoStringList_Diagonally_ForwardSlash(input);
         List<String> diagonalInputBackslash = ArrayHelper.transform2DCharIntoStringList_Diagonally_Backslash(input);
-
-        System.out.println();
-        System.out.println();
-        ArrayHelper.printList_String(diagonalInput);
-
-        System.out.println();
-        System.out.println();
-        ArrayHelper.printList_String(diagonalInputBackslash);
 
         int count = countHorizontalMatches(input);
         count += countHorizontalMatches(sidewaysInput);
@@ -36,6 +30,18 @@ public class Day4_XmasWordSearch {
 
         return count;
     }
+
+    /*
+    Count the number of times a "MAS" shows up diagonally (forwards or backwards), like this:
+        M M
+         A
+        S S
+    */
+    public int part2() {
+        return traverseArrayAndInspectMASes(input);
+    }
+
+    //region Helpers
 
     private static int countHorizontalMatches(char[][] array) {
 
@@ -51,7 +57,6 @@ public class Day4_XmasWordSearch {
         return sum;
     }
 
-
     private static int countHorizontalMatches(List<String> strings) {
 
         int sum = 0;
@@ -64,25 +69,7 @@ public class Day4_XmasWordSearch {
         return sum;
     }
 
-    //endregion
-
-    //region Day 2
-
-    /*
-    Count the number of times a "MAS" shows up diagonally (forwards or backwards), like this:
-        M M
-         A
-        S S
-    */
-    public static int countMasXes() {
-        char[][] input = FileHelper.readIntoArray_Char_2D(FILENAME, NUM_LINES);
-
-        int count = traverseArrayAndInspectAs(input);
-
-        return count;
-    }
-
-    private static int traverseArrayAndInspectAs(char[][] charArray) {
+    private static int traverseArrayAndInspectMASes(char[][] charArray) {
 
         int sum = 0;
 

@@ -1,6 +1,6 @@
 package day03;
 
-import util.ArrayHelper;
+import models.Day;
 import util.FileHelper;
 
 import java.util.ArrayList;
@@ -10,18 +10,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public class Day3 {
+public class Day3 extends Day {
 
-    private String inputFileName = "day3.txt";
     private String input;
-
-    public Day3(boolean practice) {
-        if (practice) {
-            inputFileName = inputFileName.replaceAll("\\.", "-practice.");
-        }
-
-        input = FileHelper.readIntoString(inputFileName);
-    }
 
     // "mul(x,y)" without quotes, where x and y are at least 1-digit numbers and at most 3-digit numbers
     private static final String REGEX_MUL = "mul\\(\\d{1,3},\\d{1,3}\\)";
@@ -32,7 +23,12 @@ public class Day3 {
     // don't()
     private static final String REGEX_DONT = "don't\\(\\)";
 
-    public int part1_Multiply() {
+    public Day3(boolean practice) {
+        super("day3.txt", practice);
+        input = FileHelper.readIntoString(INPUT_FILE_NAME);
+    }
+
+    public int part1() {
 
         List<String> listOfMatchingStrings = new ArrayList<>();
 
@@ -59,7 +55,10 @@ public class Day3 {
         return sum;
     }
 
-    public int part2_MultiplyWithDosAndDonts() {
+    public int part2() {
+
+        if (IS_PRACTICE)
+            input = FileHelper.readIntoString("day3-practice-2.txt"); // Day 3 is special, it has a different example for part 2
 
         List<MatchResult> listOfMuls = new ArrayList<>();
         List<MatchResult> listOfDos = new ArrayList<>();
