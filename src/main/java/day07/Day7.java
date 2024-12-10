@@ -1,5 +1,6 @@
 package day07;
 
+import models.Day;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -9,21 +10,17 @@ import java.util.*;
 
 import static util.FileHelper.PATH_TO_INPUT_FILES;
 
-public class Day7_EquationRecursion {
+public class Day7 extends Day {
 
-    private String inputFileName = "day7.txt";
-    private final List<Pair<Long, List<Long>>> input;
+    private final List<Pair<Long, List<Long>>> INPUT;
 
-    public Day7_EquationRecursion(boolean practice) {
-        if (practice) {
-            inputFileName = inputFileName.replaceAll("\\.", "-practice.");
-        }
-
-        input = readIntoMap();
+    public Day7(boolean practice) {
+        super("day7.txt", practice);
+        INPUT = readIntoMap();
     }
 
     public long part1() {
-        return input.stream()
+        return INPUT.stream()
                 .filter(pair -> canBeAnEquation(pair, pair.getValue(), false))
                 .map(Pair::getKey)
                 .mapToLong(Long::longValue)
@@ -31,7 +28,7 @@ public class Day7_EquationRecursion {
     }
 
     public long part2() {
-        return input.stream()
+        return INPUT.stream()
                 .filter(pair -> canBeAnEquation(pair, pair.getValue(), true))
                 .map(Pair::getKey)
                 .mapToLong(Long::longValue)
@@ -97,7 +94,7 @@ public class Day7_EquationRecursion {
         List<Pair<Long, List<Long>>> map = new ArrayList<>();
 
         try {
-            Scanner scanner = new Scanner(new File(PATH_TO_INPUT_FILES + inputFileName));
+            Scanner scanner = new Scanner(new File(PATH_TO_INPUT_FILES + INPUT_FILE_NAME));
 
             while (scanner.hasNextLine()) {
 
@@ -114,7 +111,7 @@ public class Day7_EquationRecursion {
             }
 
         } catch (FileNotFoundException e) {
-            System.out.println("[ERROR] FileNotFoundException while looking for file: " + inputFileName);
+            System.out.println("[ERROR] FileNotFoundException while looking for file: " + INPUT_FILE_NAME);
         }
 
         return map;
