@@ -1,16 +1,18 @@
 package models;
 
-public class Coords {
+import java.util.Objects;
+
+public class CharInGrid {
     public int r;
     public int c;
     public char value = '?';
 
-    public Coords(int r, int c) {
+    public CharInGrid(int r, int c) {
         this.r = r;
         this.c = c;
     }
 
-    public Coords(int r, int c, char value) {
+    public CharInGrid(char value, int r, int c) {
         this.r = r;
         this.c = c;
         this.value = value;
@@ -23,11 +25,16 @@ public class Coords {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Coords newCoords) {
+        if (obj instanceof CharInGrid newCoords) {
             return newCoords.r == this.r &&
                     newCoords.c == this.c &&
                     newCoords.value == this.value;
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(r, c, value);
     }
 }

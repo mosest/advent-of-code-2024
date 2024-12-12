@@ -1,48 +1,46 @@
 package day08;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import models.CharInGrid;
+import models.ColumnComparator;
+import models.Day;
+import models.RowComparator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static util.FileHelper.PATH_TO_INPUT_FILES;
 
-public class Day8 {
+public class Day8 extends Day {
 
-    private String inputFileName = "day8.txt";
-    private int inputNumLines = 50;
-    private final HashMap<Character, List<Pair<Integer, Integer>>> input;
+    private final HashMap<Character, List<CharInGrid>> INPUT;
 
     public Day8(boolean practice) {
-        if (practice) {
-            inputFileName = inputFileName.replaceAll("\\.", "-practice.");
-            inputNumLines = 12;
-        }
-
-        input = readIntoMap();
+        super("day8.txt", 50, 12, practice);
+        INPUT = readIntoMap();
     }
 
     public long part1() {
 
-        // go through each piece of input and determine where its antinodes are
-        HashMap<Pair<Integer, Integer>, Integer> antinodes = new HashMap<>();
-        for (Map.Entry<Character, List<Pair<Integer, Integer>>> entry : input.entrySet()) {
-            fillMap(antinodes, entry.getKey(), entry.getValue());
+        // go through each different character in the input,
+        // and determine where its antinodes are
+
+        HashSet<CharInGrid> setOfDistinctAntinodes = new HashSet<>();
+
+        for (Map.Entry<Character, List<CharInGrid>> entry : INPUT.entrySet()) {
+            setOfDistinctAntinodes.addAll(
+                    getSetOfDistinctAntinodes(entry.getValue()));
         }
 
-        return antinodes.keySet().stream()
-                .filter(p ->
-                            p.getKey() >= 0 &&
-                            p.getKey() < inputNumLines &&
-                            p.getValue() >= 0 &&
-                            p.getValue() < inputNumLines)
-                .toList()
-                .size();
+        List<CharInGrid> l = setOfDistinctAntinodes.stream()
+                .filter(charInGrid ->
+                            charInGrid.r >= 0 &&
+                            charInGrid.r < INPUT_NUM_LINES &&
+                            charInGrid.c >= 0 &&
+                            charInGrid.c < INPUT_NUM_LINES) // square array alert
+                .toList();
+
+                return l.size();
     }
 
     public long part2() {
@@ -51,36 +49,111 @@ public class Day8 {
 
     //region Helpers
 
-    private void fillMap(HashMap<Pair<Integer, Integer>, Integer> map, char character, List<Pair<Integer, Integer>> coordinatesList) {
+    private HashMap<Character, List<CharInGrid>> readIntoMap() {
 
-        List<List<Pair<Integer, Integer>>> combinations =
-                Lists.cartesianProduct(
-                        ImmutableList.of(
-                            List.copyOf(coordinatesList),
-                            List.copyOf(coordinatesList)));
+        HashMap<Character, List<CharInGrid>> map = new HashMap<>();
 
-        for (List<Pair<Integer, Integer>> comboPair : combinations) {
+        try {
+            Scanner scanner = new Scanner(new File(PATH_TO_INPUT_FILES + INPUT_FILE_NAME));
 
-            Pair<Integer, Integer> antenna1 = comboPair.get(0);
-            Pair<Integer, Integer> antenna2 = comboPair.get(1);
+            int r = -1;
+            while (scanner.hasNextLine()) {
 
-            int antiNode1R = Math.max(antenna1.getKey(), antenna2.getKey()) + Math.abs(antenna1.getKey() - antenna2.getKey());
-            int antiNode1C = Math.max(antenna1.getValue(), antenna2.getValue()) + Math.abs(antenna1.getValue() - antenna2.getValue());
-            int antiNode2R = Math.min(antenna1.getKey(), antenna2.getKey()) - Math.abs(antenna1.getKey() - antenna2.getKey());
-            int antiNode2C = Math.min(antenna1.getValue(), antenna2.getValue()) - Math.abs(antenna1.getValue() - antenna2.getValue());
+                r++;
+                char[] line = scanner.nextLine().toCharArray();
 
-            Pair<Integer, Integer> antinode1 = new ImmutablePair<>(antiNode1R, antiNode1C);
-            Pair<Integer, Integer> antinode2 = new ImmutablePair<>(antiNode2R, antiNode2C);
+                for (int c = 0; c < line.length; c++) {
+                    char character = line[c];
 
-            map.put(antinode1, -1); // TODO TARA: make sure duplicate pairs aren't added
-            map.put(antinode2, -1);
+                    if (character == '.') continue;
+
+                    if (map.containsKey(character)) {
+                        map.get(character).add(new CharInGrid(character, r, c));
+                    } else {
+                        List<CharInGrid> l = new ArrayList<>();
+                        l.add(new CharInGrid(character, r, c));
+                        map.put(character, l);
+                    }
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("[ERROR] FileNotFoundException while looking for file: " + INPUT_FILE_NAME);
         }
+
+        return map;
     }
 
-    private HashMap<Character, List<Pair<Integer, Integer>>> readIntoMap() {
+    private HashSet<CharInGrid> getSetOfDistinctAntinodes(List<CharInGrid> antennas) {
 
-        // Not implemented yet lol
-        return null;
+        HashSet<CharInGrid> set = new HashSet<>();
+
+        List<List<CharInGrid>> combinationsOfTwo = getDistinctPairs(antennas);
+
+        for (List<CharInGrid> pair : combinationsOfTwo) {
+
+//            pair.sort(new ColumnComparator());
+//            CharInGrid antennaLeft = pair.get(0);
+//            CharInGrid antennaRight = pair.get(1);
+//
+//            int antiNodeRowBottom = Math.max(antennaLeft.r, antennaRight.r) + Math.abs(antennaLeft.r - antennaRight.r);
+//            int antiNodeRowTop = Math.min(antennaLeft.r, antennaRight.r) - Math.abs(antennaLeft.r - antennaRight.r);
+//
+//            int antiNodeColumnRight = antennaRight.c + Math.abs(antennaLeft.c - antennaRight.c);
+//            int antiNodeColumnLeft = antennaLeft.c - Math.abs(antennaLeft.c - antennaRight.c);
+//
+//            // rise over run babey!
+//            boolean antennaSlopeIsNonNegative = true;
+//            if (antennaLeft.c != antennaRight.c)
+//                antennaSlopeIsNonNegative = ((antennaRight.r - antennaLeft.r) / (antennaRight.c - antennaLeft.c)) >= 0;
+//
+//            CharInGrid antinodeTop;
+//            CharInGrid antinodeBottom;
+//            if (antennaSlopeIsNonNegative) {
+//                antinodeTop = new CharInGrid(antiNodeRowTop, antiNodeColumnLeft);
+//                antinodeBottom = new CharInGrid(antiNodeRowBottom, antiNodeColumnRight);
+//            } else {
+//                antinodeTop = new CharInGrid(antiNodeRowTop, antiNodeColumnRight);
+//                antinodeBottom = new CharInGrid(antiNodeRowBottom, antiNodeColumnLeft);
+//            }
+
+            set.add(getAntinode(pair.get(0), pair.get(1)));
+            set.add(getAntinode(pair.get(1), pair.get(0)));
+
+            var x = 1;
+        }
+
+        return set;
+    }
+
+    private CharInGrid getAntinode(CharInGrid startAntinode, CharInGrid farAwayAntinode) {
+
+        int newR = startAntinode.r + (2 * (farAwayAntinode.r - startAntinode.r));
+        int newC = startAntinode.c + (2 * (farAwayAntinode.c - startAntinode.c));
+        return new CharInGrid(newR, newC);
+    }
+
+    private List<List<CharInGrid>> getDistinctPairs(List<CharInGrid> things) {
+
+        // forget you guava, you don't fit my use case! >:(
+        // List<List<CharInGrid>> allPairs =
+        //         Lists.cartesianProduct(
+        //                 ImmutableList.of(
+        //                         List.copyOf(things),
+        //                         List.copyOf(things)))
+
+        List<List<CharInGrid>> list = new ArrayList<>();
+
+        for (int i = 0; i < things.size(); i++) {
+            for (int j = i + 1; j < things.size(); j++) {
+                List<CharInGrid> pair = new ArrayList<>();
+                pair.add(things.get(i));
+                pair.add(things.get(j));
+                list.add(pair);
+            }
+        }
+
+        return list;
     }
 
     //endregion
