@@ -12,7 +12,7 @@ public class Day8Tests {
 
     @Test
     public void Day8_Part1_Practice() {
-        long actual = new Day8(USING_PRACTICE_INPUT)
+        int actual = new Day8(USING_PRACTICE_INPUT)
                 .part1();
 
         assertEquals(14, actual);
@@ -20,10 +20,10 @@ public class Day8Tests {
 
     @Test
     public void Day8_Part1_Puzzle() {
-        long actual = new Day8(USING_PUZZLE_INPUT)
+        int actual = new Day8(USING_PUZZLE_INPUT)
                 .part1();
 
-        assertEquals(Long.parseLong("-1"), actual);
+        assertEquals(220, actual);
     }
 //
 //    @Test

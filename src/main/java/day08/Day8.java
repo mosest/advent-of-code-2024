@@ -1,9 +1,7 @@
 package day08;
 
 import models.CharInGrid;
-import models.ColumnComparator;
 import models.Day;
-import models.RowComparator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,7 +18,7 @@ public class Day8 extends Day {
         INPUT = readIntoMap();
     }
 
-    public long part1() {
+    public int part1() {
 
         // go through each different character in the input,
         // and determine where its antinodes are
@@ -32,18 +30,17 @@ public class Day8 extends Day {
                     getSetOfDistinctAntinodes(entry.getValue()));
         }
 
-        List<CharInGrid> l = setOfDistinctAntinodes.stream()
+        return setOfDistinctAntinodes.stream()
                 .filter(charInGrid ->
                             charInGrid.r >= 0 &&
                             charInGrid.r < INPUT_NUM_LINES &&
                             charInGrid.c >= 0 &&
                             charInGrid.c < INPUT_NUM_LINES) // square array alert
-                .toList();
-
-                return l.size();
+                .toList()
+                .size();
     }
 
-    public long part2() {
+    public int part2() {
         return -1;
     }
 
@@ -91,36 +88,8 @@ public class Day8 extends Day {
         List<List<CharInGrid>> combinationsOfTwo = getDistinctPairs(antennas);
 
         for (List<CharInGrid> pair : combinationsOfTwo) {
-
-//            pair.sort(new ColumnComparator());
-//            CharInGrid antennaLeft = pair.get(0);
-//            CharInGrid antennaRight = pair.get(1);
-//
-//            int antiNodeRowBottom = Math.max(antennaLeft.r, antennaRight.r) + Math.abs(antennaLeft.r - antennaRight.r);
-//            int antiNodeRowTop = Math.min(antennaLeft.r, antennaRight.r) - Math.abs(antennaLeft.r - antennaRight.r);
-//
-//            int antiNodeColumnRight = antennaRight.c + Math.abs(antennaLeft.c - antennaRight.c);
-//            int antiNodeColumnLeft = antennaLeft.c - Math.abs(antennaLeft.c - antennaRight.c);
-//
-//            // rise over run babey!
-//            boolean antennaSlopeIsNonNegative = true;
-//            if (antennaLeft.c != antennaRight.c)
-//                antennaSlopeIsNonNegative = ((antennaRight.r - antennaLeft.r) / (antennaRight.c - antennaLeft.c)) >= 0;
-//
-//            CharInGrid antinodeTop;
-//            CharInGrid antinodeBottom;
-//            if (antennaSlopeIsNonNegative) {
-//                antinodeTop = new CharInGrid(antiNodeRowTop, antiNodeColumnLeft);
-//                antinodeBottom = new CharInGrid(antiNodeRowBottom, antiNodeColumnRight);
-//            } else {
-//                antinodeTop = new CharInGrid(antiNodeRowTop, antiNodeColumnRight);
-//                antinodeBottom = new CharInGrid(antiNodeRowBottom, antiNodeColumnLeft);
-//            }
-
             set.add(getAntinode(pair.get(0), pair.get(1)));
             set.add(getAntinode(pair.get(1), pair.get(0)));
-
-            var x = 1;
         }
 
         return set;
@@ -134,13 +103,6 @@ public class Day8 extends Day {
     }
 
     private List<List<CharInGrid>> getDistinctPairs(List<CharInGrid> things) {
-
-        // forget you guava, you don't fit my use case! >:(
-        // List<List<CharInGrid>> allPairs =
-        //         Lists.cartesianProduct(
-        //                 ImmutableList.of(
-        //                         List.copyOf(things),
-        //                         List.copyOf(things)))
 
         List<List<CharInGrid>> list = new ArrayList<>();
 
