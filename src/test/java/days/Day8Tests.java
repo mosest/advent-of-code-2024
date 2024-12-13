@@ -25,20 +25,39 @@ public class Day8Tests {
 
         assertEquals(220, actual);
     }
-//
-//    @Test
-//    public void Day7_Part2_Practice() {
-//        long actual = new Day8(USING_PRACTICE_INPUT)
-//                .part2();
-//
-//        assertEquals(-1, actual);
-//    }
-//
-//    @Test
-//    public void Day7_Part2_Puzzle() {
-//        long actual = new Day8(USING_PUZZLE_INPUT)
-//                .part2();
-//
-//        assertEquals(Long.parseLong("-1"), actual);
-//    }
+
+    @Test
+    public void Day8_Part2_Practice() {
+        int actual = new Day8(USING_PRACTICE_INPUT)
+                .part2();
+
+        assertEquals(34, actual);
+    }
+
+    @Test
+    public void Day8_Part2_Puzzle() {
+        int actual = new Day8(USING_PUZZLE_INPUT)
+                .part2();
+
+        assertEquals(-1, actual);
+    }
 }
+
+/*
+
+
+##....#....#
+.#.#....0...
+..#.#0....#.
+..##...0....
+....0....#..
+.#...#A....#
+...#..#.....
+#....#.#....
+..#.....A...
+....#....A..
+.#........#.
+...#......##
+
+
+ */

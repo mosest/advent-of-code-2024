@@ -2,10 +2,12 @@ package day08;
 
 import models.CharInGrid;
 import models.Day;
+import models.RowComparator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static util.FileHelper.PATH_TO_INPUT_FILES;
 
@@ -20,9 +22,6 @@ public class Day8 extends Day {
 
     public int part1() {
 
-        // go through each different character in the input,
-        // and determine where its antinodes are
-
         HashSet<CharInGrid> setOfDistinctAntinodes = new HashSet<>();
 
         for (Map.Entry<Character, List<CharInGrid>> entry : INPUT.entrySet()) {
@@ -31,20 +30,37 @@ public class Day8 extends Day {
         }
 
         return setOfDistinctAntinodes.stream()
-                .filter(charInGrid ->
-                            charInGrid.r >= 0 &&
-                            charInGrid.r < INPUT_NUM_LINES &&
-                            charInGrid.c >= 0 &&
-                            charInGrid.c < INPUT_NUM_LINES) // square array alert
+                .filter(charInGrid -> withinBoundsOfInput(charInGrid.r, charInGrid.c)) // square array alert
                 .toList()
                 .size();
     }
 
     public int part2() {
-        return -1;
+
+        HashSet<CharInGrid> setOfDistinctAntinodes = new HashSet<>();
+
+        for (Map.Entry<Character, List<CharInGrid>> entry : INPUT.entrySet()) {
+            setOfDistinctAntinodes.addAll(
+                    getSetOfDistinctAntinodesWithResonance(entry.getValue()));
+        }
+
+        var x = setOfDistinctAntinodes.stream()
+                //.filter(charInGrid -> withinBoundsOfInput(charInGrid.r, charInGrid.c)) // square array alert
+                .collect(Collectors.toList());
+
+        x.sort(new RowComparator());
+
+        return x.size();
     }
 
     //region Helpers
+
+    private boolean withinBoundsOfInput(int r, int c) {
+        return (r >= 0 &&
+                c >= 0 &&
+                r < INPUT_NUM_LINES &&
+                c < INPUT_NUM_LINES); // TODO: Warning Tara! Square array assumption alert.
+    }
 
     private HashMap<Character, List<CharInGrid>> readIntoMap() {
 
@@ -95,11 +111,46 @@ public class Day8 extends Day {
         return set;
     }
 
+    private HashSet<CharInGrid> getSetOfDistinctAntinodesWithResonance(List<CharInGrid> antennas) {
+
+        HashSet<CharInGrid> set = new HashSet<>();
+
+        List<List<CharInGrid>> combinationsOfTwo = getDistinctPairs(antennas);
+
+        for (List<CharInGrid> pair : combinationsOfTwo) {
+            set.addAll(getAntinodesWithResonance(pair.get(0), pair.get(1)));
+            set.addAll(getAntinodesWithResonance(pair.get(1), pair.get(0)));
+        }
+
+        return set;
+    }
+
     private CharInGrid getAntinode(CharInGrid startAntinode, CharInGrid farAwayAntinode) {
 
         int newR = startAntinode.r + (2 * (farAwayAntinode.r - startAntinode.r));
         int newC = startAntinode.c + (2 * (farAwayAntinode.c - startAntinode.c));
         return new CharInGrid(newR, newC);
+    }
+
+    private List<CharInGrid> getAntinodesWithResonance(CharInGrid startAntinode, CharInGrid farAwayAntinode) {
+
+        List<CharInGrid> list = new ArrayList<>();
+
+        list.add(new CharInGrid(startAntinode.r, startAntinode.c));
+
+        int multiplier = 2;
+        int newR = startAntinode.r + (multiplier * (farAwayAntinode.r - startAntinode.r));
+        int newC = startAntinode.c + (multiplier * (farAwayAntinode.c - startAntinode.c));
+
+        while (withinBoundsOfInput(newR, newC)) {
+            list.add(new CharInGrid(newR, newC));
+
+            multiplier++;
+            newR = startAntinode.r + (multiplier * (farAwayAntinode.r - startAntinode.r));
+            newC = startAntinode.c + (multiplier * (farAwayAntinode.c - startAntinode.c));
+        }
+
+        return list;
     }
 
     private List<List<CharInGrid>> getDistinctPairs(List<CharInGrid> things) {
