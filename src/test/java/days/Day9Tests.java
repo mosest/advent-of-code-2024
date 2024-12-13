@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Day8Tests {
+public class Day9Tests {
 
     public static final boolean USING_PRACTICE_INPUT = true;
     public static final boolean USING_PUZZLE_INPUT = false;
